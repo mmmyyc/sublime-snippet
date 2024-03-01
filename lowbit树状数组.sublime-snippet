@@ -1,0 +1,24 @@
+<snippet>
+	<content><![CDATA[
+lowbit(int x)
+{
+    return x & -x;
+}
+
+void add(int x, int c)
+{
+    for (int i = x; i <= n; i += lowbit(i)) tr[i] += c;
+}
+
+int sum(int x)
+{
+    int res = 0;
+    for (int i = x; i; i -= lowbit(i)) res += tr[i];
+    return res;
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>lowbit树状数组</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

@@ -1,0 +1,35 @@
+<snippet>
+	<content><![CDATA[
+// #pragma GCC optimize(2)
+#include<bits/stdc++.h>
+
+#define u first
+#define v second
+using namespace std;
+const int N = ;
+typedef long long LL ;
+typedef unsigned long long u64 ;
+typedef pair<int , int > PII;
+
+
+void solve(){
+	${1}
+}
+
+
+int main(){
+	int t = 1;
+//	scanf("%d", &t);
+	while(t --){
+		solve();
+	}
+	return 0;
+}
+
+]]></content>
+<tabTrigger>#inc</tabTrigger>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<!-- <tabTrigger>hello</tabTrigger> -->
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+<scope>source.c++</scope>
+</snippet>

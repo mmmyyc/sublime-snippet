@@ -1,0 +1,154 @@
+<snippet>
+	<content><![CDATA[
+template<class info, class tag>
+struct LazySegmentTree{
+    struct node
+    {
+        tag t;
+        info val;
+    }seg[N * 4];
+
+    void update(int id){
+        seg[id].val = seg[id * 2].val + seg[id * 2 + 1].val;
+    }
+
+    void settag(int id ,const tag &t){
+        seg[id].val.apply(t);
+        seg[id].t.apply(t);
+    }
+
+    void pushdown(int id){
+        // if(seg[id].t.add != 0){
+            settag(id * 2 , seg[id].t);
+            settag(id * 2 + 1, seg[id].t);
+            seg[id].t = id();
+        // }
+
+    }
+
+    void build(int id , int l , int r){
+        if(l == r){
+            seg[id].val = {a[l]};
+        }else{
+            int mid = l + r >> 1 ;
+            build(id * 2 , l , mid);
+            build(id * 2 + 1, mid + 1 , r);
+            update(id);
+        }
+    }
+
+
+    void modify(int id , int l , int r ,int ql , int qr , tag t){
+        if(ql > qr) return;
+        if(l == ql && r == qr){
+            settag(id , t);
+            return ;
+        } 
+        int mid = l + r >> 1;
+        pushdown(id);
+        if(qr <= mid){
+            modify(id * 2 , l , mid , ql , qr ,t);
+        }else if(ql > mid){
+            modify(id * 2 + 1 , mid + 1 , r , ql , qr , t);
+        }else{
+            modify(id * 2 , l , mid , ql , mid , t);
+            modify(id * 2 + 1 , mid + 1, r , mid + 1 , qr, t);
+        }
+        update(id);
+    }
+
+    info query(int id , int l , int r , int ql , int qr){
+        if(l == ql && r == qr) return seg[id].val;
+        int mid = l + r >> 1;
+        pushdown(id);
+        if(qr <= mid){
+            return query(id * 2 , l , mid , ql , qr);
+        }else if(ql > mid){
+            return query(id * 2 + 1 , mid + 1 , r , ql , qr);
+        }else{
+            return query(id * 2 , l , mid , ql , mid) + 
+                    query(id * 2 + 1 , mid + 1, r , mid + 1 , qr );
+        }
+    }  
+
+    info query(int id){
+        return seg[id].val;
+    }
+
+    template<class F>
+    int findFirst(int id , int l , int r , int ql , int qr , F check){
+        if(l == ql && r == qr){
+            if(!check(seg[id].val)) return -1;
+            else{
+                if(l == r) return l ;
+                int mid = l + r >> 1;
+                if(check(seg[id << 1].val)) return findFirst(id * 2 , l , mid , ql , mid , check);
+                else return findFirst(id * 2 + 1 , mid + 1 , r , mid + 1 , qr , check);
+
+            }
+        }
+        int mid = l + r >> 1;
+        if(qr <= mid){
+            return findFirst(id * 2 , l , mid , ql , qr , check);
+        }else if(ql > mid){
+            return findFirst(id * 2 + 1 , mid + 1 , r , ql , qr , check);
+        }else{
+            int pos = findFirst(id * 2 , l , mid , ql , mid , check) ;
+            if(pos == -1) return findFirst(id * 2 + 1 , mid + 1, r , mid + 1 , qr, check );
+            else return pos ;
+        }
+    }
+
+    template<class F>
+    int findLast(int id , int l , int r , int ql , int qr , F check){
+        if(l == ql && r == qr){
+            if(!check(seg[id].val)) return -1;
+            else{
+                if(l == r) return l ;
+                int mid = l + r >> 1;
+                if(check(seg[id << 1 | 1].val)) return findLast(id * 2 + 1 , mid + 1 , r , mid + 1 , qr , check);
+                else return findLast(id * 2 , l , mid , ql , mid , check);
+            }
+        }
+        int mid = l + r >> 1;
+        if(ql > mid){
+            return findLast(id * 2 + 1 , mid + 1 , r , ql , qr , check);
+        }else if(qr <= mid){
+            return findLast(id * 2 , l , mid , ql , qr , check);
+        }else{
+            int pos = findLast(id * 2 + 1 , mid + 1, r , mid + 1 , qr, check );
+            if(pos == -1) return findLast(id * 2 , l , mid , ql , mid , check) ;
+            else return pos ;
+        }
+    }
+};
+
+struct tag{
+
+    void apply(const tag &t) {
+
+    }
+};
+
+tag id(){return tag{0}};
+
+struct info{
+    int  a;
+    void apply(const tag &t) {
+
+    }
+};
+
+info e() { return info{0,0}; }
+
+info operator + (const info &l , const info &r) {
+     return { };
+}
+
+LazySegmentTree<info , tag> seg;
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>LazySegmentTree</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>
